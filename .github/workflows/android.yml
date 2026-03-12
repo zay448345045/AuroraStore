@@ -1,0 +1,65 @@
+name: Build and Release Aurora Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag (e.g., v4.3.5)'
+        required: true
+        default: 'v4.3.5'
+      build_type:
+        description: 'Build Type (release/debug)'
+        required: true
+        default: 'release'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+       #${{ github.event.inputs.build_type }}
+        env:
+          # 如果你有签名密钥，可以在这里配置环境变量
+    #      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+     #     KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+     #     KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+#      - name: Sign APK (Optional)
+        # 如果需要对 Release 进行正式签名，请使用 r0adkll/sign-android-release
+  #      uses: r0adkll/sign-android-release@v1
+ #       if: github.event.inputs.build_type == 'release'
+ #       id: sign_app
+  #      with:
+ #         releaseDirectory: app/build/outputs/apk/release
+  #        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+  #        alias: ${{ secrets.KEY_ALIAS }}
+  #        keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+    #      keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name }}
+          files: |
+            app/build/outputs/apk/**/*.apk
+          name: Aurora Store ${{ github.event.inputs.tag_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
