@@ -35,7 +35,6 @@ import com.aurora.store.data.model.Algorithm
 import com.aurora.store.util.PackageUtil.getPackageInfo
 import java.security.MessageDigest
 import java.security.cert.X509Certificate
-import javax.security.auth.x500.X500Principal
 
 object CertUtil {
 
@@ -84,13 +83,16 @@ object CertUtil {
 
     private fun isSignedByFDroid(context: Context, packageName: String): Boolean = try {
         getX509Certificates(context, packageName).any { cert ->
-            cert.subjectDN.name.split(",").associate {
-                val (left, right) = it.split("=")
-                left to right
-            }["O"] == "fdroid.org"
+            cert.subjectDN.name
+                .split(",")
+                .mapNotNull {
+                    val parts = it.split("=", limit = 2)
+                    if (parts.size == 2) parts[0] to parts[1] else null
+                }
+                .toMap()["O"] == "fdroid.org"
         }
     } catch (exception: Exception) {
-        Log.e(TAG, "Failed to check signing cert for $packageName")
+        Log.e(TAG, "Failed to check signing cert for $packageName", exception)
         false
     }
 
@@ -103,7 +105,7 @@ object CertUtil {
             } == true
 
             return hasFakePackageSignature
-        } catch (exception: Exception) {
+        } catch (_: Exception) {
             Log.e(TAG, "Failed to check origin for $PACKAGE_NAME_GMS")
             false
         }
@@ -142,19 +144,5 @@ object CertUtil {
         } else {
             @Suppress("DEPRECATION")
             getPackageInfo(context, packageName, PackageManager.GET_SIGNATURES)
-        }
-
-    private fun extractSHA1Fingerprint(certificate: X509Certificate): String {
-        val messageDigest = MessageDigest.getInstance(Algorithm.SHA1.value)
-        messageDigest.update(certificate.encoded)
-        return messageDigest.digest()
-            .joinToString("") { byte -> String.format("%02x", byte) }
-            .lowercase()
-    }
-
-    private fun parseX500Principal(principal: X500Principal): Map<String, String> =
-        principal.name.split(",").associate {
-            val (left, right) = it.split("=")
-            left.trim() to right.trim()
         }
 }

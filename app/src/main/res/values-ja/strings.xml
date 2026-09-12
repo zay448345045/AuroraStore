@@ -391,7 +391,6 @@
     <string name="details_data_safety_shared">このアプリが共有する可能性のあるデータ</string>
     <string name="details_data_safety_share_none">デベロッパーによると、このアプリはユーザーデータを他の企業や組織と共有しません。</string>
     <string name="exodus_tracker_desc">このバージョンのアプリには、Exodus Privacyのデータベースにまだ存在しないトラッカーがまだ含まれている可能性があります。</string>
-    <string name="notification_channel_account">アカウントについての通知</string>
     <string name="pref_common_advanced">もっと</string>
     <string name="onboarding_title_gsf">アプリ互換性</string>
     <string name="pref_updates_app_source">アプリソース</string>
@@ -470,4 +469,13 @@
     <string name="action_filter_no_gms">Google Play 開発者サービスなし</string>
     <string name="page"><xliff:g id="number">%1$d</xliff:g> ページ</string>
     <string name="onboarding_gms_microg">microGは、Androidデバイス向けにGoogle Play Servicesに依存するアプリを再実装によって動作させる、同様の機能を提供する無料のオープンソース実装です。\n\nmicroGはアプリがこれらのGoogle APIにアクセスすることを可能にし、ユーザーの互換性を高めつつプライバシー上の利点を提供します。\n\nGoogle Mobile Servicesに依存するアプリケーションを開くと、microGはバックグラウンドで自動的に動作します。</string>
+    <string name="account_default">デフォルト</string>
+    <string name="account_remove">削除</string>
+    <string name="account_remove_title">アカウントを削除しますか？</string>
+    <string name="account_remove_message">%1$sをAurora Storeから削除しますか？</string>
+    <string name="account_add">アカウントを追加する</string>
+    <string name="account_set_default_message">設定したデフォルトアカウントを使用するようにAurora Storeが再起動します。</string>
+    <string name="account_switching">アカウトを切り替えます…</string>
+    <string name="account_adding">アカウントを追加します…</string>
+    <string name="account_set_default">デフォルトに設定する</string>
 </resources>
